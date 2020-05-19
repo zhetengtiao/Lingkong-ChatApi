@@ -11,13 +11,13 @@
  *  :)
  *
  */
-//--------------------------------------------------------
-$passwd = "Ab1234";//passwd，管理员密码，用于创建apikey
+//--------------------------------------------------------配置
+$passwd = "Ab1234";//passwd，管理员密码，用于创建apikey，使用前最好改一下
 $servername = "localhost";//servername，数据库连接地址
 $username = "root";//username，用户名
 $password = "123456";//password，密码
 $dbname = "ChatApi";//dbname,如果是系统自动创建那么就不用改
-//--------------------------------------------------------
+//--------------------------------------------------------配置
 $version = "1.1.2";
 $o = $_GET["o"];
 $r = $_GET["r"];
@@ -48,7 +48,13 @@ switch ($o) {
                 if ($conn->connect_error) {
                     die("连接失败: " . $conn->connect_error);
                 }
-                $sql = "CREATE TABLE ApiKey";
+                $sql = "CREATE TABLE ApiKey (
+id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
+firstname VARCHAR(30) NOT NULL,
+lastname VARCHAR(30) NOT NULL,
+email VARCHAR(50),
+reg_date TIMESTAMP
+)";
                 if ($conn->query($sql) === TRUE) {
                     echo "数据库创建成功";
                 } else {
