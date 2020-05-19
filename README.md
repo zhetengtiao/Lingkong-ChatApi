@@ -18,6 +18,7 @@
 | passwd | 管理员密码，可在index.php中设置|在使用r和a选项时必填|
 | o | option，选项|必填|
 | r | reload，r选项的设置|当使用自定义数据库时必须填no_CD|
+
 实例：（get方法）
 ```$xslt
 http://localhost/index.php?o=r&passwd=Ab1234
