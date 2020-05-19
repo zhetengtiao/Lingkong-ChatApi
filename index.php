@@ -2,6 +2,7 @@
 /**
  * Lingkong-ChatApi
  * Powerd By Zhetengtiao-LKT
+ * 2020.5.19
  *
  *  What you laughed at me yesterday, I turned it into motivation today.
  *  And I will never forget the "power" you gave me.
@@ -41,65 +42,69 @@ switch ($o) {
     case "v":
         echo "Lingkong_ChatApi-Powerd By LingkongTeam. Version " . $version;
     case "r":
-        if ($r === "no_CD") {
-            if ($passwd1 === $passwd) {
-                $conn = new mysqli($servername, $username, $password, $dbname);
-                // 检测连接
-                if ($conn->connect_error) {
-                    die("连接失败: " . $conn->connect_error);
-                }
-                $sql = "CREATE TABLE ApiKey (
-id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
-firstname VARCHAR(30) NOT NULL,
-lastname VARCHAR(30) NOT NULL,
-email VARCHAR(50),
-reg_date TIMESTAMP
-)";
-                if ($conn->query($sql) === TRUE) {
-                    echo "数据库创建成功";
-                } else {
-                    echo "Error creating database: " . $conn->error;
-                }
-                $conn->close();
-            } else {
-                echo "Admin Password Error!";
-                return 0;
+        if ($passwd1 === $passwd) {
+            $conn = new mysqli($servername, $username, $password);
+            // 创建数据库
+            $sql = "CREATE DATABASE ChatApi";
+            if ($conn->query($sql) === FALSE) {
+                echo "Error creating database: " . $conn->error;
             }
+            $conn->close();
+            echo "Done!";
         } else {
-            if ($passwd1 === $passwd) {
-                $conn = new mysqli($servername, $username, $password);
-                // 创建数据库
-                $sql = "CREATE DATABASE ChatApi";
-                if ($conn->query($sql) === TRUE) {
-                    echo "数据库创建成功";
-                } else {
-                    echo "Error creating database: " . $conn->error;
-                }
-                $conn->close();
-                $conn = new mysqli($servername, $username, $password, $dbname);
-                // 检测连接
-                if ($conn->connect_error) {
-                    die("连接失败: " . $conn->connect_error);
-                }
-                $sql = "CREATE TABLE ApiKey (
-id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
-firstname VARCHAR(30) NOT NULL,
-lastname VARCHAR(30) NOT NULL,
-email VARCHAR(50),
-reg_date TIMESTAMP
-)";
-                if ($conn->query($sql) === TRUE) {
-                    echo "数据表创建成功";
-                } else {
-                    echo "Error creating database: " . $conn->error;
-                }
-                $conn->close();
-            } else {
-                echo "Admin Password Error!";
-                return 0;
-            }
+            echo "Admin Password Error!";
             return 0;
         }
+        return 0;
+    case "n":
+        if (empty($apikey))
+        {
+            echo "No apikey!";
+            return 0;
+        }
+        if (empty($text))
+        {
+            echo "No text!";
+            return 0;
+        }
+        $conn = new mysqli($servername, $username, $password, $dbname);
+        // 检测连接
+        if ($conn->connect_error) {
+            die("连接失败: " . $conn->connect_error);
+        }
+        $time = date("Y-m-d");
+        $sql="insert into $apikey (text) values('$text')";
+        if ($conn->query($sql) === TRUE) {
+            echo "Done!";
+        } else {
+            echo "Error:" . $conn->error;
+        }
+        $conn->close();
+        return 0;
+    case "l":
+        if (empty($apikey))
+        {
+            echo "No apikey!";
+            return 0;
+        }
+        $conn = new mysqli($servername, $username, $password, $dbname);
+        // 检测连接
+        if ($conn->connect_error) {
+            die("连接失败: " . $conn->connect_error);
+        }
+        $sql = "SELECT * FROM $apikey;";
+        $result = $conn->query($sql);
+        if ($result->num_rows > 0) {
+            $row1=array();
+            while($row = $result->fetch_assoc()) {
+                array_push($row1,$row);
+            }
+            echo json_encode($row1);
+        } else {
+            echo "0 ";
+        }
+        $conn->close();
+        return 0;
     case "a":
         if ($passwd1 === $passwd) {
             $apkey = qrand(rand(1, 10));
@@ -109,10 +114,7 @@ reg_date TIMESTAMP
                 die("连接失败: " . $conn->connect_error);
             }
             $sql = "CREATE TABLE " . $apkey . " (
-id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
-firstname VARCHAR(30) NOT NULL,
-lastname VARCHAR(30) NOT NULL,
-email VARCHAR(50),
+TEXT VARCHAR(30) NOT NULL,
 reg_date TIMESTAMP
 )";
             if ($conn->query($sql) === FALSE)
@@ -128,6 +130,6 @@ reg_date TIMESTAMP
         }
     default :
         echo "Waring : No parameters passed in.";
-        echo "Lingkong_ChatApi-Powerd By LingkongTeam. Version " . $version;
+        echo "Lingkong_ChatApi-Powerd By Zhetengtiao. Version " . $version;
 }
 ?>
